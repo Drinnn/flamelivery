@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, response, Response } from 'express';
 
 export async function errorHandler(
   err: Error,
@@ -8,9 +8,13 @@ export async function errorHandler(
 ) {
   console.log(err);
 
-  return res
-    .status(500)
-    .json({ message: `Internal server error: ${err.message}` });
+  if (err instanceof Error) {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+
+  return res.status(500).json({ message: 'Internal server error' });
 }
 
 export default errorHandler;
